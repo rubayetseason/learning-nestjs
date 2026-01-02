@@ -31,7 +31,7 @@ export class ProductController {
   @Patch(':id')
   updateProduct(
     @Param('id') id: string,
-    @Body() body: { name?: string; price?: number },
+    @Body() body: Partial<{ name?: string; price?: number }>,
   ) {
     return this.productService.updateProduct(Number(id), {
       name: body.name,
