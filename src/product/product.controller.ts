@@ -8,6 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
+import { ProductDto } from './dto/product.dto';
 
 @Controller('product')
 export class ProductController {
@@ -21,11 +22,8 @@ export class ProductController {
     return this.productService.getProductById(Number(id));
   }
   @Post()
-  createProduct(@Body() body: { name: string; price: number }) {
-    const res = this.productService.createProduct({
-      name: body.name,
-      price: body.price,
-    });
+  createProduct(@Body() createProductDto: ProductDto) {
+    const res = this.productService.createProduct(createProductDto);
     return res;
   }
   @Patch(':id')
