@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { IProductType } from './interfaces/product.interface';
-import { ProductDto } from './dto/product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -16,39 +17,57 @@ export class ProductService {
     return this.products;
   }
 
-  getProductById(id: number): IProductType | undefined {
-    const product = this.products.find((product) => product.id === id);
-    if (!product)
+  getProductById(id: number): IProductType {
+    const product = this.products.find((p) => p.id === id);
+
+    if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
     return product;
   }
 
-  createProduct(createProductDto: ProductDto): IProductType {
+  createProduct(data: CreateProductDto): IProductType {
+    const nextId =
+      this.products.length > 0
+        ? Math.max(...this.products.map((p) => p.id)) + 1
+        : 1;
+
     const newProduct: IProductType = {
-      id: this.products.length + 1,
-      ...createProductDto,
+      id: nextId,
+      name: data.name,
+      price: data.price,
     };
 
     this.products.push(newProduct);
     return newProduct;
   }
 
-  updateProduct(
-    id: number,
-    data: { name?: string; price?: number },
-  ): IProductType {
-    const index = this.products.findIndex((product) => product.id === id);
-    if (index === -1)
+  updateProduct(id: number, data: UpdateProductDto): IProductType {
+    const index = this.products.findIndex((p) => p.id === id);
+
+    if (index === -1) {
       throw new NotFoundException(`Product with ID ${id} not found`);
-    this.products[index] = { ...this.products[index], ...data };
-    return this.products[index];
+    }
+
+    const updatedProduct: IProductType = {
+      ...this.products[index],
+      ...(data.name !== undefined && { name: data.name }),
+      ...(data.price !== undefined && { price: data.price }),
+    };
+
+    this.products[index] = updatedProduct;
+    return updatedProduct;
   }
 
   deleteProduct(id: number): IProductType {
-    const deletableProduct = this.products.find((product) => product.id === id);
-    if (!deletableProduct)
+    const product = this.products.find((p) => p.id === id);
+
+    if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
-    this.products = this.products.filter((product) => product.id !== id);
-    return deletableProduct;
+    }
+
+    this.products = this.products.filter((p) => p.id !== id);
+    return product;
   }
 }

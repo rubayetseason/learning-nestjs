@@ -8,36 +8,49 @@ import {
   Post,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { ProductDto } from './dto/product.dto';
+import { ZodValidationPipe } from 'src/pipes/zod-validation.pipe';
+import {
+  CreateProductDto,
+  createProductSchema,
+} from './dto/create-product.dto';
+import {
+  UpdateProductDto,
+  updateProductSchema,
+} from './dto/update-product.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+
   @Get()
   getAllProducts() {
     return this.productService.getAllProducts();
   }
+
   @Get(':id')
   getProductById(@Param('id') id: string) {
     return this.productService.getProductById(Number(id));
   }
+
   @Post()
-  createProduct(@Body() createProductDto: ProductDto) {
-    const res = this.productService.createProduct(createProductDto);
-    return res;
-  }
-  @Patch(':id')
-  updateProduct(
-    @Param('id') id: string,
-    @Body() body: Partial<{ name?: string; price?: number }>,
+  create(
+    @Body(new ZodValidationPipe(createProductSchema))
+    createProductDto: CreateProductDto,
   ) {
-    return this.productService.updateProduct(Number(id), {
-      name: body.name,
-      price: body.price,
-    });
+    return this.productService.createProduct(createProductDto);
   }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateProductSchema))
+    updateProductDto: UpdateProductDto,
+  ) {
+    return this.productService.updateProduct(Number(id), updateProductDto);
+  }
+
   @Delete(':id')
-  deleteProduct(@Param('id') id: string) {
+  remove(@Param('id') id: string) {
     return this.productService.deleteProduct(Number(id));
   }
 }
