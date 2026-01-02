@@ -35,18 +35,18 @@ export class ProductController {
   @Post()
   create(
     @Body(new ZodValidationPipe(createProductSchema))
-    createProductDto: CreateProductDto,
+    data: CreateProductDto,
   ) {
-    return this.productService.createProduct(createProductDto);
+    return this.productService.createProduct(data);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateProductSchema))
-    updateProductDto: UpdateProductDto,
+    data: UpdateProductDto,
   ) {
-    return this.productService.updateProduct(Number(id), updateProductDto);
+    return this.productService.updateProduct(Number(id), data);
   }
 
   @Delete(':id')
