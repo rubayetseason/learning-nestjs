@@ -20,13 +20,17 @@ import {
 } from './dto/update-product.dto';
 import { CustomUppercasePipe } from 'src/pipes/custom-pipe-uppercase.pipe';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
+import { Roles } from 'src/guards/roles/roles.decorator';
+import { Role } from 'src/guards/roles/roles.enums';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
   getAllProducts() {
     return this.productService.getAllProducts();
   }
