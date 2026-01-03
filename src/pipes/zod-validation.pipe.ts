@@ -13,8 +13,8 @@ export class ZodValidationPipe implements PipeTransform {
 
         throw new BadRequestException({
           statusCode: 400,
-          message: 'Validation failed',
-          reason: firstIssue?.message ?? 'Invalid request data',
+          error: 'Validation failed',
+          message: firstIssue?.message ?? 'Invalid request data',
         });
       }
 

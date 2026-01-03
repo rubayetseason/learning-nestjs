@@ -17,6 +17,7 @@ import {
   UpdateProductDto,
   updateProductSchema,
 } from './dto/update-product.dto';
+import { CustomUppercasePipe } from 'src/pipes/custom-pipe-uppercase.pipe';
 
 @Controller('product')
 export class ProductController {
@@ -30,6 +31,11 @@ export class ProductController {
   @Get(':id')
   getProductById(@Param('id') id: string) {
     return this.productService.getProductById(Number(id));
+  }
+
+  @Post('uppercase')
+  getUppercase(@Body('text', new CustomUppercasePipe()) text: string) {
+    return { uppercaseText: text };
   }
 
   @Post()
