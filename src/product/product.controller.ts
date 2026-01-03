@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ZodValidationPipe } from 'src/pipes/zod-validation.pipe';
@@ -18,12 +19,14 @@ import {
   updateProductSchema,
 } from './dto/update-product.dto';
 import { CustomUppercasePipe } from 'src/pipes/custom-pipe-uppercase.pipe';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   getAllProducts() {
     return this.productService.getAllProducts();
   }
