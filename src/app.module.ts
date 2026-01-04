@@ -5,9 +5,15 @@ import { ProductController } from './product/product.controller';
 import { ProductService } from './product/product.service';
 import { ProductModule } from './product/product.module';
 import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ProductModule],
+  imports: [
+    ProductModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+  ],
   controllers: [AppController, ProductController],
   providers: [AppService, ProductService],
 })
