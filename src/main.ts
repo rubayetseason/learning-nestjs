@@ -6,5 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(process.env.PORT ?? 3000);
+  // this is used because we have implemented OnApplicationShutdown interface in product service and nestjs needs to be aware of it
+  app.enableShutdownHooks();
 }
 bootstrap();

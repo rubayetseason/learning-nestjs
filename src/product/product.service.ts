@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  OnModuleInit,
+  OnApplicationShutdown,
+} from '@nestjs/common';
 import { IProductType } from './interfaces/product.interface';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
-export class ProductService {
+export class ProductService implements OnModuleInit, OnApplicationShutdown {
   private products: IProductType[] = [
     { id: 1, name: 'Laptop', price: 999.99 },
     { id: 2, name: 'Smartphone', price: 499.99 },
@@ -12,6 +17,23 @@ export class ProductService {
     { id: 4, name: 'Monitor', price: 199.99 },
     { id: 5, name: 'Headphones', price: 49.99 },
   ];
+
+  private fakeDatabaseConnected: boolean = false;
+
+  onModuleInit(): void {
+    // Simulate database connection
+    this.fakeDatabaseConnected = true;
+    console.log('✅ ProductService connected to fake database');
+  }
+
+  onApplicationShutdown(signal: string): void {
+    // Simulate database disconnection
+    this.fakeDatabaseConnected = false;
+    console.log(
+      '❌ ProductService disconnected from fake database. Signal:',
+      signal,
+    );
+  }
 
   getAllProducts(): IProductType[] {
     return this.products;
