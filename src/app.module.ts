@@ -6,6 +6,8 @@ import { ProductService } from './product/product.service';
 import { ProductModule } from './product/product.module';
 import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController, ProductController],
   providers: [AppService, ProductService],
