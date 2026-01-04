@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('register')
   registerUser(
     @Body(new ZodValidationPipe(registerUserSchema))
     data: RegisterUserDto,
